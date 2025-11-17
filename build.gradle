@@ -30,3 +30,7 @@ dependencies {
 application {
     mainClass = 'com.adjectivecolournoun.gradle.Greetz'
 }
+
+tasks.register('hello') {
+    doLast { println 'hi' }
+}
