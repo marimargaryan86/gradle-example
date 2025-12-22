@@ -14,8 +14,8 @@ repositories {
 base.archivesName = 'gradle-example'
 
 dependencies {
-    // Groovy BOM
-    implementation platform('org.apache.groovy:groovy-bom:5.+')
+    // Groovy BOM - Use 4.0.x for Spock compatibility
+    implementation platform('org.apache.groovy:groovy-bom:4.0.24')
 
     // Groovy module dependency
     implementation 'org.apache.groovy:groovy-json'
@@ -27,7 +27,7 @@ dependencies {
     implementation ':simple-jar'
 
     // ========== TEST DEPENDENCIES ==========
-    // Spock Framework for BDD-style testing
+    // Spock Framework for BDD-style testing (compatible with Groovy 4.0)
     testImplementation platform('org.spockframework:spock-bom:2.3-groovy-4.0')
     testImplementation 'org.spockframework:spock-core'
 
@@ -42,7 +42,7 @@ dependencies {
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.16.1'
     testImplementation 'io.github.bonigarcia:webdrivermanager:5.6.2'
 
-    // Groovy for tests (use same BOM as main)
+    // Groovy for tests (uses same BOM - 4.0.x)
     testImplementation 'org.apache.groovy:groovy'
     testImplementation 'org.apache.groovy:groovy-json'
 }
