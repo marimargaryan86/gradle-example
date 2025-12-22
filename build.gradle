@@ -25,10 +25,94 @@ dependencies {
 
     // Dependency from local jar
     implementation ':simple-jar'
+
+    // ========== TEST DEPENDENCIES ==========
+    // Spock Framework for BDD-style testing
+    testImplementation platform('org.spockframework:spock-bom:2.3-groovy-4.0')
+    testImplementation 'org.spockframework:spock-core'
+
+    // JUnit 5 for additional test support
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+
+    // REST API testing
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+    testImplementation 'io.rest-assured:json-path:5.4.0'
+
+    // Selenium WebDriver for UI testing
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.16.1'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.6.2'
+
+    // Groovy for tests (use same BOM as main)
+    testImplementation 'org.apache.groovy:groovy'
+    testImplementation 'org.apache.groovy:groovy-json'
 }
 
 application {
     mainClass = 'com.adjectivecolournoun.gradle.Greetz'
+}
+
+// ========== TEST CONFIGURATION ==========
+test {
+    useJUnitPlatform()
+
+    // Test logging
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+        exceptionFormat "full"
+    }
+
+    // Generate reports
+    reports {
+        html.required = true
+        junitXml.required = true
+    }
+
+    // System properties for tests
+    systemProperty 'kineto.base.url', System.getProperty('kineto.base.url', 'https://kineto.app')
+    systemProperty 'kineto.test.email', System.getProperty('kineto.test.email', '')
+    systemProperty 'kineto.test.password', System.getProperty('kineto.test.password', '')
+
+    // Fail on first error (optional)
+    failFast = false
+
+    // Max parallel forks
+    maxParallelForks = 1
+}
+
+// Custom task for authorization tests only
+tasks.register('testAuth', Test) {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching '*AuthorizationSpec*'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+// Custom task for publishing tests only
+tasks.register('testPublishing', Test) {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching '*PublishingSpec*'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+// Custom task for security tests only
+tasks.register('testSecurity', Test) {
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching '*SecuritySpec*'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 tasks.register('hello') {
